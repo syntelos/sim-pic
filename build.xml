@@ -1,0 +1,15 @@
+<project name="sim-pic" default="all">
+
+ <target name="all">
+
+  <antcall target="hexf"/>
+
+ </target>
+
+ <target name="hexf">
+
+  <ant dir="hexf" />
+
+ </target>
+
+</project>
