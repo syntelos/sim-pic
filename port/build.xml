@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<project name="port" default="jar">
+
+  <property name="src" location="src"/>
+  <property name="lib" location="lib"/>
+  <property name="bin" location="bin"/>
+  <property name="dst" location=".."/>
+
+
+  <property name="target.jar" value="${dst}/${ant.project.name}.jar"/>
+
+  <target name="jar" depends="compile">
+
+    <delete file="${target.jar}"/>
+
+    <jar jarfile="${target.jar}" basedir="${bin}" manifest="${src}/Manifest.mf" />
+
+    <delete>
+      <fileset dir="${bin}">
+        <include name="**/*.class"/>
+      </fileset>
+    </delete>
+
+  </target>
+
+  <target name="compile">
+
+    <mkdir dir="${bin}"/>
+
+    <javac srcdir="${src}" destdir="${bin}" debug="true" includeantruntime="false">
+
+      <include name="**/*.java"/>
+    </javac>
+
+  </target>
+
+  <target name="clean" description="Drop bin directory">
+
+    <delete dir="${bin}"/>
+
+  </target>
+
+</project>
