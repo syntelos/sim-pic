@@ -1,4 +1,4 @@
-package digi.mv2mic;
+package port;
 
 import hapax.Template ;
 import hapax.TemplateException ;
@@ -20,22 +20,6 @@ public class Templates
 	super("/");
     }
 
-    public void generate(Input input, File target)
-	throws TemplateException, IOException
-    {
-
-	Template template = this.getTemplate(Options.Instance.getLanguage().name());
-
-	PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(target),"US-ASCII"));
-	try {
-
-	    template.render(input,out);
-	}
-	finally {
-	    out.flush();
-	    out.close();
-	}
-    }
     public void generate(Input input, String tn, File target)
 	throws TemplateException, IOException
     {

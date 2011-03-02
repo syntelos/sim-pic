@@ -1,8 +1,12 @@
 package port;
 
+import hapax.TemplateDataDictionary;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 
@@ -13,7 +17,22 @@ public class Lkr
         CODEPAGE, DATABANK, SHAREBANK, SECTION;
     }
 
-    public static class Descriptor {
+    public static class Descriptor
+	extends hapax.TemplateDictionary
+    {
+	public enum Var {
+	    kind, name, start, end;
+
+
+	    public final static Var For(String name){
+		try {
+		    return Var.valueOf(name);
+		}
+		catch (RuntimeException exc){
+		    return null;
+		}
+	    }
+	}
 
         public final Kind kind;
         public final String name;
@@ -51,6 +70,54 @@ public class Lkr
             else 
                 return (Kind.SHAREBANK == this.kind);
         }
+	public boolean isPage(){
+            if (this.protection)
+                return false;
+            else 
+                return (Kind.CODEPAGE == this.kind);
+	}
+	public boolean isEPROM(){
+	    return (Kind.CODEPAGE == this.kind && this.name.equals("eedata"));
+	}
+	public boolean isConfig(){
+	    return (Kind.CODEPAGE == this.kind && this.name.equals(".config"));
+	}
+	public boolean isIDLocs(){
+	    return (Kind.CODEPAGE == this.kind && this.name.equals(".idlocs"));
+	}
+        public boolean isSFR(){
+            if (this.protection)
+                return (Kind.DATABANK == this.kind)&&(this.name.startsWith("sfr"));
+	    else
+		return false;
+        }
+	public void renderComplete(){
+	}
+	public boolean hasVariable(String name){
+	    if (null != Var.For(name))
+		return true;
+	    else
+		return super.hasVariable(name);
+	}
+	public String getVariable(String name){
+	    Var var = Var.For(name);
+	    if (null != var){
+		switch(var){
+		case kind:
+		    return this.kind.name();
+		case name:
+		    return this.name;
+		case start:
+		    return String.format("0x%x",this.start);
+		case end:
+		    return String.format("0x%x",this.end);
+		default:
+		    throw new Error(var.name());
+		}
+	    }
+	    else
+		return super.getVariable(name);
+	}
 
         public final static Descriptor[] Add(Descriptor[] list, Descriptor item){
             if (null == item)
@@ -111,6 +178,62 @@ public class Lkr
     }
 
 
+    public List<TemplateDataDictionary> gpr(){
+	List<TemplateDataDictionary> list = new ArrayList<TemplateDataDictionary>();
+	for (Descriptor desc: this.descriptors){
+	    if (desc.isGPR())
+		list.add(desc);
+	}
+	return list;
+    }
+    public List<TemplateDataDictionary> shr(){
+	List<TemplateDataDictionary> list = new ArrayList<TemplateDataDictionary>();
+	for (Descriptor desc: this.descriptors){
+	    if (desc.isShr())
+		list.add(desc);
+	}
+	return list;
+    }
+    public List<TemplateDataDictionary> pages(){
+	List<TemplateDataDictionary> list = new ArrayList<TemplateDataDictionary>();
+	for (Descriptor desc: this.descriptors){
+	    if (desc.isPage())
+		list.add(desc);
+	}
+	return list;
+    }
+    public List<TemplateDataDictionary> eprom(){
+	List<TemplateDataDictionary> list = new ArrayList<TemplateDataDictionary>();
+	for (Descriptor desc: this.descriptors){
+	    if (desc.isEPROM())
+		list.add(desc);
+	}
+	return list;
+    }
+    public List<TemplateDataDictionary> config(){
+	List<TemplateDataDictionary> list = new ArrayList<TemplateDataDictionary>();
+	for (Descriptor desc: this.descriptors){
+	    if (desc.isConfig())
+		list.add(desc);
+	}
+	return list;
+    }
+    public List<TemplateDataDictionary> idlocs(){
+	List<TemplateDataDictionary> list = new ArrayList<TemplateDataDictionary>();
+	for (Descriptor desc: this.descriptors){
+	    if (desc.isIDLocs())
+		list.add(desc);
+	}
+	return list;
+    }
+    public List<TemplateDataDictionary> sfr(){
+	List<TemplateDataDictionary> list = new ArrayList<TemplateDataDictionary>();
+	for (Descriptor desc: this.descriptors){
+	    if (desc.isSFR())
+		list.add(desc);
+	}
+	return list;
+    }
     public boolean isNotEmpty(){
         return (null != this.descriptors);
     }

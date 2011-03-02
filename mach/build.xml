@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
-<project name="port" default="jar">
+<project name="mach" default="jar">
 
   <property name="src" location="src"/>
-  <property name="lib" location="lib"/>
+  <property name="lib" location=".."/>
   <property name="bin" location="bin"/>
   <property name="dst" location=".."/>
-  <property name="xtm" location="xtm"/>
 
 
   <property name="target.jar" value="${dst}/${ant.project.name}.jar"/>
 
-  <path id="lib.hapax">
+  <path id="lib">
 
     <fileset dir="${lib}">
-      <include name="**/hapax-*.jar" />
+      <include name="**/*.jar" />
+      <exclude name="**/mach*.jar" />
     </fileset>
   </path>
 
@@ -21,13 +21,7 @@
 
     <delete file="${target.jar}"/>
 
-    <jar jarfile="${target.jar}" basedir="${bin}" manifest="${src}/Manifest.mf">
-
-      <zipfileset src="${toString:lib.hapax}"/>
-      <fileset dir="${xtm}">
-        <include name="**/*.xtm"/>
-      </fileset>
-    </jar>
+    <jar jarfile="${target.jar}" basedir="${bin}" manifest="${src}/Manifest.mf" />
 
     <delete>
       <fileset dir="${bin}">
@@ -44,8 +38,7 @@
     <javac srcdir="${src}" destdir="${bin}" debug="true" includeantruntime="false">
 
       <include name="**/*.java"/>
-
-      <classpath refid="lib.hapax"/>
+      <classpath refid="lib"/>
     </javac>
 
   </target>

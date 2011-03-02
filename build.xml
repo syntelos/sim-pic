@@ -4,11 +4,27 @@
 
   <antcall target="hexf"/>
 
+  <antcall target="port"/>
+
+  <antcall target="mach"/>
+
  </target>
 
  <target name="hexf">
 
   <ant dir="hexf" />
+
+ </target>
+
+ <target name="port">
+
+  <ant dir="port" />
+
+ </target>
+
+ <target name="mach">
+
+  <ant dir="mach" />
 
  </target>
 

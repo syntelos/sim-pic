@@ -11,6 +11,34 @@ import java.io.IOException;
  */
 public class Main {
 
+    private final static void Usage(){
+
+        System.err.println("Usage");
+        System.err.println();
+        System.err.println("  port.Main  <clock>  <arch>  <inc>  <lkr>  <src>  <tgt>");
+        System.err.println("  port.Main  <clock>  <arch>  <proc>  <src>  <tgt>");
+        System.err.println();
+        System.err.println("Description");
+        System.err.println();
+        System.err.println("    clock    -- FOSC, e.g., 4000000");
+        System.err.println();
+        System.err.println("    arch     -- Element of Arch, e.g. 'p14'.");
+        System.err.println();
+        System.err.println("    inc      -- Assembler constants, e.g. ");
+        System.err.println("                    //gputils/header/p16f873.inc");
+        System.err.println();
+        System.err.println("    lkr      -- Assembler linker script, e.g. ");
+        System.err.println("                    //gputils/lkr/16f873.lkr");
+        System.err.println();
+        System.err.println("    proc     -- Processor name, e.g. p16f873 or 16f873.");
+        System.err.println();
+        System.err.println("    src      -- Template (source) name");
+        System.err.println();
+        System.err.println("    tgt      -- Template target (output) file");
+        System.err.println();
+        System.err.println();
+        System.exit(1);
+    }
 
     public static void main(String[] argv){
         if (null != argv){
@@ -18,31 +46,26 @@ public class Main {
 
                 int clock;
                 Arch arch;
+		String srct;
                 File incf, lkrf, tgtf;
                 switch(argv.length){
-
-                case 3:
-                    clock = Integer.decode(argv[0]);
-                    arch = Arch.For(argv[1]);
-                    incf = Utils.GetHeader(argv[2]);
-                    lkrf = Utils.GetLinkerScript(argv[2]);
-                    tgtf = null;
-                    break;
-
-                case 4:
-                    clock = Integer.decode(argv[0]);
-                    arch = Arch.For(argv[1]);
-                    incf = Utils.GetHeader(argv[2]);
-                    lkrf = Utils.GetLinkerScript(argv[2]);
-                    tgtf = new File(argv[3]);
-                    break;
 
                 case 5:
                     clock = Integer.decode(argv[0]);
                     arch = Arch.For(argv[1]);
-                    incf = Utils.GetHeader(argv[2]);
-                    lkrf = Utils.GetLinkerScript(argv[3]);
+                    incf = GpUtils.GetHeader(argv[2]);
+                    lkrf = GpUtils.GetLinkerScript(argv[2]);
+		    srct = argv[3];
                     tgtf = new File(argv[4]);
+                    break;
+
+                case 6:
+                    clock = Integer.decode(argv[0]);
+                    arch = Arch.For(argv[1]);
+                    incf = GpUtils.GetHeader(argv[2]);
+                    lkrf = GpUtils.GetLinkerScript(argv[3]);
+		    srct = argv[4];
+                    tgtf = new File(argv[5]);
                     break;
 
                 default:
@@ -63,22 +86,10 @@ public class Main {
 
                             if (lkr.isNotEmpty()){
 
-                                if (null == tgtf){
-                                    tgtf = new File("src/aino/lib/"+inc.name+".java");
-                                    File tgtd = tgtf.getParentFile();
-                                    if (!tgtd.isDirectory()){
 
-                                        System.err.printf("Error, target directory not found '%s'.%n",tgtd.getPath());
-                                        System.exit(1);
-                                        return;
-                                    }
-                                }
 
-                                Lib tgt = new Lib(clock,arch,inc,lkr);
-                                tgt.write(tgtf);
-
-                                System.err.printf("Success writing file '%s'.%n",tgtf.getPath());
-                                System.exit(0);
+				System.err.printf("Wrote file '%s'.%n",tgtf.getPath());
+				System.exit(0);
                             }
                             else {
                                 System.err.printf("Error parsing file '%s'.%n",lkrf.getPath());
@@ -108,33 +119,5 @@ public class Main {
         else {
             Usage();
         }
-    }
-    private final static void Usage(){
-
-        System.err.println("Usage");
-        System.err.println();
-        System.err.println("  aino.port.Main  <clock>  <arch>  <src.inc>  <src.lkr>  <tgt.java>");
-        System.err.println("  aino.port.Main  <clock>  <arch>  <proc.id>  <tgt.java>");
-        System.err.println("  aino.port.Main  <clock>  <arch>  <proc.id>  ");
-        System.err.println();
-        System.err.println("Description");
-        System.err.println();
-        System.err.println("    clock    -- FOSC, e.g., 4000000");
-        System.err.println();
-        System.err.println("    arch     -- Element of aino.ano.Arch, e.g. 'p14'.");
-        System.err.println();
-        System.err.println("    src.inc  -- Assembler constants, e.g. ");
-        System.err.println("                    /usr/local/share/gputils/header/p16f873.inc");
-        System.err.println();
-        System.err.println("    src.lkr  -- Assembler linker script, e.g. ");
-        System.err.println("                    /usr/local/share/gputils/lkr/16f873.lkr");
-        System.err.println();
-        System.err.println("    proc.id  -- Processor name, e.g. p16f873 or 16f873.");
-        System.err.println();
-        System.err.println("    tgt.java -- Aino lib source, e.g. ");
-        System.err.println("                    src/aino/lib/P16F873.java");
-        System.err.println();
-        System.err.println();
-        System.exit(1);
     }
 }
