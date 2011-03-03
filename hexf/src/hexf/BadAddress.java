@@ -8,10 +8,10 @@ public class BadAddress
 {
 
     public BadAddress(int addr){
-	super(String.format("Bad address %d",addr));
+	super(String.format("Bad address 0x%x",addr));
     }
     public BadAddress(Hexf hexf, int addr){
-	super(String.format("Bad address %d in %s",addr,hexf.name));
+	super(String.format("Bad address 0x%x in %s",addr,hexf.name));
     }
     public BadAddress(CodeStream stream, int addr){
 	this(stream.hexf,addr);

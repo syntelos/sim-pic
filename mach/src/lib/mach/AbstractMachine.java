@@ -51,7 +51,7 @@ public abstract class AbstractMachine
 	this.pageEnd = Math.max(this.pageEnd,end);
     }
     protected int indexPage(int address){
-	return ((address>>1)-this.pageStart);
+	return (address-this.pageStart);
     }
     protected void initConfig(int start, int end){
 	this.configStart = Math.min(this.configStart,start);
@@ -62,8 +62,6 @@ public abstract class AbstractMachine
 	    this.config = new byte[len];
 	else if (this.config.length < len)
 	    this.config = new byte[len];
-	else
-	    throw new BadAddress(end);
     }
     public int uint8Config(int address){
 	return this.config[this.indexConfig(address)];
@@ -83,8 +81,6 @@ public abstract class AbstractMachine
 	    this.eedata = new byte[len];
 	else if (this.eedata.length < end)
 	    this.eedata = new byte[len];
-	else
-	    throw new BadAddress(end);
     }
     protected int indexEedata(int address){
 	return (address-this.eedataStart);
@@ -95,6 +91,9 @@ public abstract class AbstractMachine
     public int uint8Eedata(int address, int value){
 	return this.eedata[this.indexEedata(address)] = (byte)value;
     }
+    /*
+     * Each call is another bank under GPR
+     */
     protected void initSfr(int start, int end){
 	this.dataStart = Math.min(this.dataStart,start);
 	this.dataEnd = Math.max(this.dataEnd,end);
@@ -104,8 +103,6 @@ public abstract class AbstractMachine
 	    this.data = new byte[len];
 	else if (this.data.length < len)
 	    this.data = new byte[len];
-	else
-	    throw new BadAddress(end);
     }
     protected int indexSfr(int address){
 	return (address-this.dataStart);
@@ -116,6 +113,9 @@ public abstract class AbstractMachine
     public int uint8Sfr(int address, int value){
 	return this.data[this.indexSfr(address)] = (byte)value;
     }
+    /*
+     * Each call is another bank over SFR
+     */
     protected void initGpr(int start, int end){
 	this.dataStart = Math.min(this.dataStart,start);
 	this.dataEnd = Math.max(this.dataEnd,end);
@@ -125,8 +125,6 @@ public abstract class AbstractMachine
 	    this.data = new byte[len];
 	else if (this.data.length < len)
 	    this.data = new byte[len];
-	else
-	    throw new BadAddress(end);
     }
     protected int indexGpr(int address){
 	return (address-this.dataStart);
@@ -136,6 +134,12 @@ public abstract class AbstractMachine
     }
     public int uint8Gpr(int address, int value){
 	return this.data[this.indexGpr(address)] = (byte)value;
+    }
+    /*
+     */
+    protected void initRegister(Register reg){
+    }
+    protected void initBit(Bit bit){
     }
     protected int indexData(int address){
 	return (address-this.dataStart);
@@ -188,7 +192,7 @@ public abstract class AbstractMachine
 			continue;
 		    else {
 			Instruction inst = this.createInstruction(addr,opc);
-			this.code = Instruction.Add(this.code,inst);
+			this.code = Instruction.Add(this.code,this.indexPage(addr),inst);
 		    }
 		}
 		    break;
@@ -271,7 +275,7 @@ public abstract class AbstractMachine
     }
     public boolean execNop(){
 
-	this.PC += 2;
+	this.PC += 1;
 
 	return (this.PC < this.pageEnd);
     }
@@ -297,7 +301,7 @@ public abstract class AbstractMachine
     }
     public boolean execCall(Instruction instr){
 
-	this.returnStack[this.returnStackIndex++] = (this.PC+2);
+	this.returnStack[this.returnStackIndex++] = (this.PC+1);
 
 	this.PC = instr.address;
 
@@ -307,13 +311,13 @@ public abstract class AbstractMachine
 
 	this.W = 0;
 
-	this.PC += 2;
+	this.PC += 1;
 
 	return (this.PC < this.pageEnd);
     }
     public boolean execClear(Instruction instr){
 
-	this.PC += 2;
+	this.PC += 1;
 
 	return (this.PC < this.pageEnd);
     }

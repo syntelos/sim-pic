@@ -6,88 +6,34 @@ public class CodeStream
 
     public final Hexf hexf;
 
-    public final Code[] code;
-
-    public final int count;
+    private final byte[] code;
 
     public final int offset, length;
 
-    private int index, address;
 
-
-    public CodeStream(Hexf hexf){
-	this(hexf,hexf.code);
-    }
-    private CodeStream(Hexf hexf, Code[] code){
+    CodeStream(Hexf hexf, byte[] code, int ofs, int len){
 	super();
 	this.hexf = hexf;
 	if (null != code){
-	    java.util.Arrays.sort(code);
 	    this.code = code;
-	    this.count = code.length;
-	    {
-		Code first = code[0];
-		this.offset = first.offset;
-	    }
-	    {
-		Code last = code[this.count-1];
-		this.length = (last.offset+last.length);
-	    }
+	    this.offset = ofs;
+	    this.length = len;
 	}
 	else
 	    throw new IllegalStateException(String.format("Empty HEX file '%s'.",hexf.name));
     }
 
 
-    /**
-     * @return Zero-positive complete, Integer.MIN_VALUE or
-     * Integer.MAX_VALUE for address miss (under or over).
-     */
     public int uint8(int addr){
-	if (this.index < this.count){
-	    Code code = this.code[this.index];
-	    int value = code.uint8(addr);
-	    if (-1 < value && value < Integer.MAX_VALUE)
-		return value;
-	    else if (0 > value)
-		return Integer.MIN_VALUE;
-	    else {
-		this.index += 1;
-		return this.uint8(addr);
-	    }
-	}
-	else
-	    return Integer.MAX_VALUE;
+
+	return (this.code[addr-this.offset] & 0xFF);
     }
-    /**
-     * @return Zero-positive complete, Integer.MIN_VALUE or
-     * Integer.MAX_VALUE for address miss (under or over).
-     */
     public int uint16(int addr){
-	if (this.index < this.count){
-	    Code code = this.code[this.index];
-	    int value = code.uint16(addr);
-	    if (-1 < value && value < Integer.MAX_VALUE)
-		return value;
-	    else if (0 > value){
-		if (Integer.MIN_VALUE == value)
-		    return Integer.MIN_VALUE;
-		else {
-		    this.index += 1;
-		    code = this.code[this.index];
-		    int value1 = code.uint8(addr);
-		    if (-1 < value1 && value1 < Integer.MAX_VALUE)
-			return ((-value) | (value1 <<8));
-		    else
-			throw new BadAddress(hexf,addr);
-		}
-	    }
-	    else {
-		this.index += 1;
-		return this.uint16(addr);
-	    }
-	}
-	else
-	    return Integer.MAX_VALUE;
+	int idx = (addr-this.offset);
+	final int value0 = (this.code[idx] & 0xFF);
+	idx += 1;
+	final int value1 = (this.code[idx] & 0xFF);
+
+	return (value0 | (value1 <<8));
     }
 }

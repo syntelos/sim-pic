@@ -14,9 +14,17 @@ public class Main
     public static void Usage(){
 	System.out.println("Usage");
 	System.out.println();
-	System.out.println("    hexf [-m mach.chine] -i file.hex [options]");
+	System.out.println("      sim-pic -m mach -i file.hex ");
 	System.out.println();
-
+	System.out.println("Description");
+	System.out.println();
+	System.out.println("   Load hex into machine and open interactive");
+	System.out.println("   command line prompt.");
+	System.out.println();
+	System.out.println("   For example");
+	System.out.println();
+	System.out.println("      sim-pic -m 16f883 -i prog.hex ");
+	System.out.println();
 	System.exit(1);
     }
     public enum Opt {
@@ -61,7 +69,12 @@ public class Main
 		case M:
 		    cc += 1;
 		    if (cc < argc){
-			arg = argv[cc];
+
+			arg = argv[cc].toUpperCase();
+
+			if ('P' != arg.charAt(0))
+			    arg = "P"+arg;
+			
 			machineClass = Class.forName(arg);
 		    }
 		    else
@@ -81,7 +94,7 @@ public class Main
 			/*
 			 * init
 			 */
-			machine.machineInit(new CodeStream(hexf));
+			machine.machineInit(hexf.stream());
 			/*
 			 * ready
 			 */

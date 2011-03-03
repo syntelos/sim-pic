@@ -1,21 +1,30 @@
 <project name="sim-pic" default="all">
 
- <target name="all">
+  <target name="all">
 
-  <ant dir="hexf" />
+    <ant dir="hexf" />
 
-  <ant dir="port" />
+    <ant dir="port" />
 
-  <java jar="port.jar" fork="true">
-    <arg value="4000000"/>
-    <arg value="P14"/>
-    <arg value="port-P14.txt"/>
-    <arg value="mach"/>
-    <arg value="mach/src"/>
-  </java>
+    <java jar="port.jar" fork="true">
+      <arg value="4000000"/>
+      <arg value="P14"/>
+      <arg value="port-P14.txt"/>
+      <arg value="mach"/>
+      <arg value="mach/src"/>
+    </java>
 
-  <ant dir="mach" />
+    <ant dir="mach" />
 
- </target>
+    <delete file="${ant.project.name}.jar"/>
+
+    <jar jarfile="${ant.project.name}.jar" manifest="Manifest.mf">
+
+      <zipfileset src="hexf.jar"/>
+      <zipfileset src="port.jar"/>
+      <zipfileset src="mach.jar"/>
+    </jar>
+
+  </target>
 
 </project>

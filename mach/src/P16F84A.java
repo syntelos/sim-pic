@@ -79,6 +79,61 @@ public class P16F84A
         this.initSfr(0x0,0xb);
         this.initSfr(0x80,0x8b);
         this.initGpr(0xc,0x4f);
+	this.initRegister(this.INDF);
+	this.initRegister(this.TMR0);
+	this.initRegister(this.PCL);
+	this.initRegister(this.STATUS);
+	this.initRegister(this.FSR);
+	this.initRegister(this.PORTA);
+	this.initRegister(this.PORTB);
+	this.initRegister(this.EEDATA);
+	this.initRegister(this.EEADR);
+	this.initRegister(this.PCLATH);
+	this.initRegister(this.INTCON);
+	this.initRegister(this.OPTION_REG);
+	this.initRegister(this.TRISA);
+	this.initRegister(this.TRISB);
+	this.initRegister(this.EECON1);
+	this.initRegister(this.EECON2);
+	this.initBit(this.IRP);
+	this.initBit(this.RP1);
+	this.initBit(this.RP0);
+	this.initBit(this.NOT_TO);
+	this.initBit(this.NOT_PD);
+	this.initBit(this.Z);
+	this.initBit(this.DC);
+	this.initBit(this.C);
+	this.initBit(this.GIE);
+	this.initBit(this.EEIE);
+	this.initBit(this.T0IE);
+	this.initBit(this.INTE);
+	this.initBit(this.RBIE);
+	this.initBit(this.T0IF);
+	this.initBit(this.INTF);
+	this.initBit(this.RBIF);
+	this.initBit(this.NOT_RBPU);
+	this.initBit(this.INTEDG);
+	this.initBit(this.T0CS);
+	this.initBit(this.T0SE);
+	this.initBit(this.PSA);
+	this.initBit(this.PS2);
+	this.initBit(this.PS1);
+	this.initBit(this.PS0);
+	this.initBit(this.EEIF);
+	this.initBit(this.WRERR);
+	this.initBit(this.WREN);
+	this.initBit(this.WR);
+	this.initBit(this.RD);
+	this.initBit(this._CP_ON);
+	this.initBit(this._CP_OFF);
+	this.initBit(this._PWRTE_ON);
+	this.initBit(this._PWRTE_OFF);
+	this.initBit(this._WDT_ON);
+	this.initBit(this._WDT_OFF);
+	this.initBit(this._LP_OSC);
+	this.initBit(this._XT_OSC);
+	this.initBit(this._HS_OSC);
+	this.initBit(this._RC_OSC);
     }
 
 
@@ -87,6 +142,6 @@ public class P16F84A
         if (null != op)
             return new Instruction(this,op,addr,opc);
         else
-            throw new IllegalArgumentException(String.format("0x%x",addr));
+            throw new IllegalArgumentException(String.format("Opcode 0x%x not found (arch P14, page address 0x%x)",opc,addr));
     }
 }

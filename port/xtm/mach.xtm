@@ -24,7 +24,9 @@ public class {{=name}}
         this.initConfig({{=start}},{{=end}});{{/config}}{{#eedata}}
         this.initEedata({{=start}},{{=end}});{{/eedata}}{{#sfr}}
         this.initSfr({{=start}},{{=end}});{{/sfr}}{{#gpr}}
-        this.initGpr({{=start}},{{=end}});{{/gpr}}
+        this.initGpr({{=start}},{{=end}});{{/gpr}}{{#registers}}
+	this.initRegister(this.{{=name}});{{/registers}}{{#bits}}
+	this.initBit(this.{{=name}});{{/bits}}
     }
 
 
@@ -33,6 +35,6 @@ public class {{=name}}
         if (null != op)
             return new Instruction(this,op,addr,opc);
         else
-            throw new IllegalArgumentException(String.format("0x%x",addr));
+            throw new IllegalArgumentException(String.format("Opcode 0x%x not found (arch {{=arch}}, page address 0x%x)",opc,addr));
     }
 }

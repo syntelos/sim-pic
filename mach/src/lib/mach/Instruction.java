@@ -36,17 +36,31 @@ public class Instruction
     }
 
 
-    public final static Instruction[] Add(Instruction[] list, Instruction item){
+    public final static Instruction[] Add(Instruction[] list, int idx, Instruction item){
 	if (null == item)
 	    return list;
-	else if (null == list)
-	    return new Instruction[]{item};
+	else if (null == list){
+	    if (0 == idx)
+		return new Instruction[]{item};
+	    else {
+		Instruction[] copier = new Instruction[idx+1];
+		copier[idx] = item;
+		return copier;
+	    }
+	}
 	else {
-	    int count = list.length;
-	    Instruction[] copier = new Instruction[count+1];
-	    System.arraycopy(list,0,copier,0,count);
-	    copier[count] = item;
-	    return copier;
+	    final int len = list.length;
+	    if (idx < len){
+		list[idx] = item;
+		return list;
+	    }
+	    else {
+		final int count = (idx+1);
+		Instruction[] copier = new Instruction[count];
+		System.arraycopy(list,0,copier,0,len);
+		copier[idx] = item;
+		return copier;
+	    }
 	}
     }
 }
