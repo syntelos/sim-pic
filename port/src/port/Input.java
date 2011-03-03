@@ -18,7 +18,7 @@ public class Input
     extends hapax.TemplateDictionary
 {
     public enum Var {
-	clock, arch;
+	name, clock, arch;
 
 	public final static Var For(String name){
 	    try {
@@ -43,21 +43,44 @@ public class Input
 	this.clock = clock;
 	this.arch = arch;
 	this.inc = inc;
+	List<TemplateDataDictionary> list;
 	{
-	    this.sections.put("registers",inc.registers());
-	    this.sections.put("bits",inc.bits());
-	    this.sections.put("definitions",inc.definitions());
-	    this.sections.put("configs",inc.configs());
+	    list = inc.registers();
+	    if (0 < list.size())
+		this.sections.put("registers",list);
+	    list = inc.bits();
+	    if (0 < list.size())
+		this.sections.put("bits",list);
+	    list = inc.definitions();
+	    if (0 < list.size())
+		this.sections.put("definitions",list);
+	    list = inc.configs();
+	    if (0 < list.size())
+		this.sections.put("configs",list);
 	}
 	this.lkr = lkr;
 	{
-	    this.sections.put("gpr",lkr.gpr());
-	    this.sections.put("shr",lkr.shr());
-	    this.sections.put("pages",lkr.pages());
-	    this.sections.put("eprom",lkr.eprom());
-	    this.sections.put("config",lkr.config());
-	    this.sections.put("idlocs",lkr.idlocs());
-	    this.sections.put("sfr",lkr.sfr());
+	    list = lkr.gpr();
+	    if (0 < list.size())
+		this.sections.put("gpr",list);
+	    list = lkr.shr();
+	    if (0 < list.size())
+		this.sections.put("shr",list);
+	    list = lkr.pages();
+	    if (0 < list.size())
+		this.sections.put("pages",list);
+	    list = lkr.eedata();
+	    if (0 < list.size())
+		this.sections.put("eedata",list);
+	    list = lkr.config();
+	    if (0 < list.size())
+		this.sections.put("config",list);
+	    list = lkr.idlocs();
+	    if (0 < list.size())
+		this.sections.put("idlocs",list);
+	    list = lkr.sfr();
+	    if (0 < list.size())
+		this.sections.put("sfr",list);
 	}
     }
 
@@ -74,6 +97,8 @@ public class Input
 	Var var = Var.For(name);
 	if (null != var){
 	    switch(var){
+	    case name:
+		return this.inc.name;
 	    case clock:
 		return String.valueOf(this.clock);
 	    case arch:

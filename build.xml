@@ -2,27 +2,17 @@
 
  <target name="all">
 
-  <antcall target="hexf"/>
-
-  <antcall target="port"/>
-
-  <antcall target="mach"/>
-
- </target>
-
- <target name="hexf">
-
   <ant dir="hexf" />
-
- </target>
-
- <target name="port">
 
   <ant dir="port" />
 
- </target>
-
- <target name="mach">
+  <java jar="port.jar" fork="true">
+    <arg value="4000000"/>
+    <arg value="P14"/>
+    <arg value="port-P14.txt"/>
+    <arg value="mach"/>
+    <arg value="mach/src"/>
+  </java>
 
   <ant dir="mach" />
 

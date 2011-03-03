@@ -183,7 +183,7 @@ public class Header
 	    if (null != var){
 		switch(var){
 		case section:
-		    return this.section.symbol.name();
+		    return this.section.register;
 		case name:
 		    return this.name;
 		case value:

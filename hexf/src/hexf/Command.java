@@ -5,7 +5,7 @@ import java.util.StringTokenizer;
 public class Command {
 
     public enum Op {
-	STEP, GOTO, RUN, PRINT, HELP, UNKNOWN, EMPTY;
+	STEP, GOTO, RUN, PRINT, HELP, UNKNOWN, EMPTY, QUIT;
 
 	public final static Op For(String op){
 	    try {

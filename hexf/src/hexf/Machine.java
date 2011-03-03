@@ -7,7 +7,7 @@ public interface Machine {
     /**
      * Initialize machine with hex code input.
      */
-    public Machine machineInit(Code code);
+    public Machine machineInit(CodeStream code);
     /**
      * After init stage complete and before user input.
      */

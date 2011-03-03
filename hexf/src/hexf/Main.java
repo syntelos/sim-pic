@@ -81,8 +81,7 @@ public class Main
 			/*
 			 * init
 			 */
-			for (Code code: hexf)
-			    machine.machineInit(code);
+			machine.machineInit(new CodeStream(hexf));
 			/*
 			 * ready
 			 */

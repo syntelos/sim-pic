@@ -18,7 +18,7 @@ public class Hexf
 {
     public final String name;
 
-    public Code[] codes;
+    public Code[] code;
 
 
     public Hexf(File file)
@@ -52,7 +52,7 @@ public class Hexf
 		current = new Code(file,lno,line);
 		list = Code.Add(list,current);
 	    }
-	    this.codes = list;
+	    this.code = list;
 	}
 	finally {
 	    in.close();
@@ -61,30 +61,30 @@ public class Hexf
 
 
     public int size(){
-	if (null != this.codes)
-	    return this.codes.length;
+	if (null != this.code)
+	    return this.code.length;
 	else
 	    return 0;
     }
     public Code get(int idx){
 	if (-1 < idx && idx < this.size())
-	    return this.codes[idx];
+	    return this.code[idx];
 	else
 	    return null;
     }
     public Code first(){
-	if (null != this.codes)
-	    return this.codes[0];
+	if (null != this.code)
+	    return this.code[0];
 	else
 	    return null;
     }
     public Code[] tail(){
-	if (null != this.codes)
-	    return Code.Tail(this.codes);
+	if (null != this.code)
+	    return Code.Tail(this.code);
 	else
 	    return null;
     }
     public java.util.Iterator<Code> iterator(){
-	return new Code.Iterator(this.codes);
+	return new Code.Iterator(this.code);
     }
 }

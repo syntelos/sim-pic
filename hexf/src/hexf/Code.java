@@ -12,6 +12,7 @@ import java.util.StringTokenizer;
  */
 public class Code
     extends Object
+    implements Comparable<Code>
 {
 
     public final String string;
@@ -67,12 +68,39 @@ public class Code
     }
 
 
-    public int offset(int ofs){
-	final int idx = (ofs-this.offset);
-	if (-1 < idx && idx < this.length)
+    /**
+     * @return Zero-positive complete, Integer.MAX_VALUE for overflow and
+     * Integer.MIN_VALUE for underflow.
+     */
+    public int uint8(int addr){
+	final int idx = (addr-this.offset);
+	if (0 > idx)
+	    return Integer.MIN_VALUE;
+	else if (idx < this.length)
 	    return (this.data[idx] & 0xFF);
 	else
-	    throw new IllegalArgumentException(String.valueOf(ofs));
+	    return Integer.MAX_VALUE;
+    }
+    /**
+     * @return Zero-positive complete, negative continuation,
+     * Integer.MAX_VALUE for overflow and Integer.MIN_VALUE for
+     * underflow.
+     */
+    public int uint16(int addr){
+	final int idx = (addr-this.offset);
+	if (0 > idx)
+	    return Integer.MIN_VALUE;
+	else if (idx < this.length){
+	    final int idx1 = (idx+1);
+	    if (idx1 < this.length){
+		return ((this.data[idx] & 0xFF) | 
+			(this.data[idx1] & 0xFF)<<8);
+	    }
+	    else
+		return -(this.data[idx] & 0xFF);
+	}
+	else
+	    return Integer.MAX_VALUE;
     }
     public int index(int idx){
 
@@ -115,6 +143,14 @@ public class Code
 		return copy;
 	    }
 	}
+    }
+    public int compareTo(Code that){
+	if (this.offset == that.offset)
+	    return 0;
+	else if (this.offset < that.offset)
+	    return -1;
+	else
+	    return 1;
     }
     public String toString(){
 	return this.string;

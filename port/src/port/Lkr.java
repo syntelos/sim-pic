@@ -76,7 +76,7 @@ public class Lkr
             else 
                 return (Kind.CODEPAGE == this.kind);
 	}
-	public boolean isEPROM(){
+	public boolean isEEDATA(){
 	    return (Kind.CODEPAGE == this.kind && this.name.equals("eedata"));
 	}
 	public boolean isConfig(){
@@ -202,10 +202,10 @@ public class Lkr
 	}
 	return list;
     }
-    public List<TemplateDataDictionary> eprom(){
+    public List<TemplateDataDictionary> eedata(){
 	List<TemplateDataDictionary> list = new ArrayList<TemplateDataDictionary>();
 	for (Descriptor desc: this.descriptors){
-	    if (desc.isEPROM())
+	    if (desc.isEEDATA())
 		list.add(desc);
 	}
 	return list;
